@@ -1,8 +1,13 @@
 #pragma once
+#include <fstream>
+#include <iostream>
+#include <string>
+using namespace std;
 
-struct Users { string Id, User_name, Email, Password; };
+void registerNewAcc(fstream& file, char name[100]);
 
-void registerNewAcc();
-void login();
-void changePass();
+void login(fstream& file, char name[100]);
 
+void changePass(fstream& file, char name[100]);
+
+void fillUsersArr(fstream& file, char name[100]);
