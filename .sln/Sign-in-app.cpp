@@ -16,8 +16,6 @@
 #include "users.h"
 using namespace std;
 
-
-
 // the text file to store and read from it
 fstream dataFile;
 
