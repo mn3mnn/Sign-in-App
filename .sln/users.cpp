@@ -374,8 +374,38 @@ void login(fstream& file, char name[100]) {
 //
 void changePass(fstream& file, char name[100]) {
 	cout << "change pass..\n";
-	/*
-	--------------------------------------------------        * code *        -------------------------------------------------------------------
-	*/
+		
+	sign_in();
+     string old_password , new_password , check ;
+
+    cout<<"enter the old password: ";
+    cin>>old_password;
+
+
+
+
+    for(int i =0 ; i<100 ; i++){
+        if(old_password == usersArr[i].Password){
+            cout<<"enter the new password: ";
+           cin>>new_password;
+
+
+            cout<<"enter the new password again: ";
+            cin>>check;
+
+            if (new_password == check){
+                cout<<"done password has changed";
+                usersArr[i].Password = new_password ;
+                break;
+            }
+            else{
+                cout<<" the password don't match !" ;
+                break;
+            }
+        }
+        else if( i == 99 ){
+            cout<<"wrong password !" ;
+        }
+    }
 
 }
