@@ -183,9 +183,16 @@ string encrypt_pass(string& pass) {
 }
 //________________________________________________________________________________________________
 string decrypt_pass(string& pass) {
-	/*
-	--------------------------------------------------        *  code  *          ------------------------------------------------------------------
-	*/
+	const int letterCount = 'z' - 'a' + 1;
+    for (auto &letter: pass) {
+        if (!isalpha(letter)) {
+            continue;
+        }
+        const bool isUpper = isupper(letter);
+        const char baseOffset = isUpper ? 'A' : 'a';
+        const auto distanceFromAlphabetStart = letter - baseOffset;
+        letter = (baseOffset + letterCount - 1) - distanceFromAlphabetStart;
+    }
 
 	return pass;
 }
