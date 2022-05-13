@@ -1,4 +1,4 @@
-// FCAI – Programming 1 – 2022 - Assignment 4
+// FCAI ï¿½ Programming 1 ï¿½ 2022 - Assignment 4
 // Program Name: Sign-in-app.cpp
 // Last Modification Date: 5/1/2022
 // Author1 and ID and Group: Monaem Tarek
@@ -300,12 +300,68 @@ void registerNewAcc(fstream& file, char name[100]) {
 
 }
 
+void sign_in(){
+    string iD , password;
+
+
+	cout<<"enter user's iD: ";
+	cin>>iD;
+
+	cout<<"enter user's password: ";
+	cin>> password;
+
+	for (int i=0; i<100 ; i++ ){
+        if(iD == usersArr[i].Id && password==usersArr[i].Password){
+            cout<< "successful login, welcome "<< usersArr[i].User_name << endl;
+            break;
+        }
+        else if (i== 99){
+
+        cout<< "wrong iD or Password , try again ! \n";
+        cout<<"enter user's iD: ";
+        cin>>iD;
+
+        cout<<"enter user's password: ";
+        cin>> password;
+
+        for (int i=0; i<100 ; i++ ){
+            if(iD == usersArr[i].Id && password==usersArr[i].Password){
+                cout<< "successful login, welcome "<< usersArr[i].User_name << endl;
+                break;
+            }
+            else if(i == 99){
+                    cout<< "wrong iD or Password , try again ! \n";
+                    cout<<"enter user's iD: ";
+                    cin>>iD;
+
+                    cout<<"enter user's password: ";
+                    cin>> password;
+
+                for (int i=0; i<100 ; i++ ){
+                    if(iD == usersArr[i].Id && password==usersArr[i].Password){
+                        cout<< "successful login, welcome "<< usersArr[i].User_name << endl;
+                        break;
+                    }
+                    else if(i == 99){
+                        cout<<"you are denied access to the system !";
+                        break;
+                    }
+
+                }
+
+            }
+
+
+        }
+
+        }
+	}
+}
+
 //
 void login(fstream& file, char name[100]) {
 	cout << "login..\n";
-	/*
-	--------------------------------------------------        * code *        -------------------------------------------------------------------
-	*/
+	sign_in();
 }
 
 //
