@@ -310,47 +310,67 @@ void registerNewAcc(fstream& file, char name[100]) {
 void sign_in(){
     string iD , password;
 
-
-	cout<<"enter user's iD: ";
+	cout<<"enter user's iD:\n ";
 	cin>>iD;
 
-	cout<<"enter user's password: ";
-	cin>> password;
-
+	cout<<"enter user's password: \n";
+	int ch;
+    ch = getch();
+    while (ch != 13)
+    {
+        password.push_back(ch);
+        cout<<'*';
+        ch =getch();
+    }
+    password = encrypt_pass(password);
 	for (int i=0; i<100 ; i++ ){
         if(iD == usersArr[i].Id && password==usersArr[i].Password){
-            cout<< "successful login, welcome "<< usersArr[i].User_name << endl;
+            cout<< "successful login, welcome\n "<< usersArr[i].User_name << endl;
             break;
         }
         else if (i== 99){
 
         cout<< "wrong iD or Password , try again ! \n";
-        cout<<"enter user's iD: ";
+        cout<<"enter user's iD:\n ";
         cin>>iD;
 
-        cout<<"enter user's password: ";
-        cin>> password;
+        cout<<"enter user's password:\n ";
+        int ch;
+        ch = getch();
+        while (ch != 13)
+        {
+            password.push_back(ch);
+            cout<<'*';
+            ch =getch();
+        }
 
         for (int i=0; i<100 ; i++ ){
             if(iD == usersArr[i].Id && password==usersArr[i].Password){
-                cout<< "successful login, welcome "<< usersArr[i].User_name << endl;
+                cout<< "successful login, welcome\n "<< usersArr[i].User_name << endl;
                 break;
             }
             else if(i == 99){
                     cout<< "wrong iD or Password , try again ! \n";
-                    cout<<"enter user's iD: ";
+                    cout<<"enter user's iD:\n ";
                     cin>>iD;
 
-                    cout<<"enter user's password: ";
-                    cin>> password;
+                    cout<<"enter user's password: \n";
+                    int ch;
+                    ch = getch();
+                    while (ch != 13)
+                    {
+                        password.push_back(ch);
+                        cout<<'*';
+                        ch =getch();
+                    }
 
-                for (int i=0; i<100 ; i++ ){
-                    if(iD == usersArr[i].Id && password==usersArr[i].Password){
-                        cout<< "successful login, welcome "<< usersArr[i].User_name << endl;
-                        break;
+                    for (int i=0; i<100 ; i++ ){
+                        if(iD == usersArr[i].Id && password==usersArr[i].Password){
+                            cout<< "successful login, welcome\n "<< usersArr[i].User_name << endl;
+                            break;
                     }
                     else if(i == 99){
-                        cout<<"you are denied access to the system !";
+                        cout<<"you are denied access to the system !\n";
                         break;
                     }
 
@@ -374,24 +394,48 @@ void login(fstream& file, char name[100]) {
 //
 void changePass(fstream& file, char name[100]) {
 	cout << "change pass..\n";
-		
-	sign_in();
-     string old_password , new_password , check ;
 
-    cout<<"enter the old password: ";
-    cin>>old_password;
+    sign_in();
 
+    string old_password , new_password , check ;
+
+    cout<<"\n enter the old password: \n";
+    int ch;
+    ch = getch();
+    while (ch != 13)
+    {
+        old_password.push_back(ch);
+        cout<<'*';
+        ch =getch();
+    }
+    cout<<endl;
+    old_password = encrypt_pass(old_password);
 
 
 
     for(int i =0 ; i<100 ; i++){
         if(old_password == usersArr[i].Password){
             cout<<"enter the new password: ";
-           cin>>new_password;
+            int ch;
+            ch = getch();
+            while (ch != 13)
+            {
+                new_password.push_back(ch);
+                cout<<'*';
+                ch =getch();
+            }
+            cout<<endl;
 
 
             cout<<"enter the new password again: ";
-            cin>>check;
+            ch = getch();
+            while (ch != 13)
+            {
+                check.push_back(ch);
+                cout<<'*';
+                ch =getch();
+            }
+            cout<<endl;
 
             if (new_password == check){
                 cout<<"done password has changed";
@@ -407,5 +451,6 @@ void changePass(fstream& file, char name[100]) {
             cout<<"wrong password !" ;
         }
     }
+    new_password = encrypt_pass(new_password);
 
 }
