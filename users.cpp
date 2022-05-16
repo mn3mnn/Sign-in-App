@@ -244,7 +244,8 @@ string take_valid_pass() {
         cout<<'*';
         ch =getch();
     }
-    cout<<endl;
+    cout << "\n";
+
 	while (!regex_match(pass, match, pass_ex))
 	{
 	    cout << "Your Password is weak \n";
@@ -256,7 +257,7 @@ string take_valid_pass() {
             cout<<'*';
             ch =getch();
         }
-        cout<<endl;
+        cout << "\n";
     }
 //________________________________________________________________________________________
 	// to make the user input the password two times
@@ -268,7 +269,7 @@ string take_valid_pass() {
     cout<<'*';
     ch =getch();
     }
-    cout<<endl;
+    cout << "\n";
     if (pass2 != pass)
     {
         cout << "Please try again! The passwords are not identical !\n";
@@ -281,7 +282,7 @@ string take_valid_pass() {
 	// return the encrypted password
 	return pass;
 }
-//---------------------------------------------------------------------------------------------------------------------------------------
+
 // fuction to get user's info and check if it's valid or not and then save the data if valid
 void registerNewAcc(fstream& file, char name[100]) {
 
@@ -290,6 +291,7 @@ void registerNewAcc(fstream& file, char name[100]) {
 
 	// take a valid id
 	id = take_valid_id();
+
 	// check if the id is already exist
 	while (is_id_exist(id))
 	{
@@ -317,91 +319,57 @@ void registerNewAcc(fstream& file, char name[100]) {
 
 	// save the info to the file
 	save_new_user(file, name, id, email, username, password, phone);
-    
-    usersArr->Email.clear();
-    usersArr->Id.clear();
-    usersArr->User_name.clear();
-    usersArr->Password.clear();
-    usersArr->Phone.clear();
 
-    fillUsersArr(file, name);
-   
 }
 
+// return id and pass and the array index 
 string sign_in(fstream& file, char name[100]){
     string id, password, usr_index;
-
-	cout<<"enter user's iD:\n ";
-	cin >> id;
-
-	cout<<"enter user's password:\n";
-	int ch;
-    ch = getch();
-    while (ch != 13)
+    bool found = false;
+    int t = 1;
+    while((!found) && (t <= 3))
     {
-        password.push_back(ch);
-        cout<<'*';
-        ch =getch();
-    }
-    password = encrypt_pass(password);
-	for (int i=0; i<100 ; i++ ){
-        if(id == usersArr[i].Id && password == usersArr[i].Password){
-            cout<< "successful login, welcome\n "<< usersArr[i].User_name << endl;
-            usr_index = to_string(i);
-            break;
-        }
-        else if(i==99){
 
-        cout<< "wrong iD or Password , try again ! \n";
-        cout<<"enter user's iD:\n ";
-        cin>>id;
+        cout << "enter user's id:\n";
+        cin >> id;
 
-        cout<<"enter user's password:\n ";
+        cout << "enter user's password:\n";
         int ch;
         ch = getch();
         while (ch != 13)
         {
             password.push_back(ch);
-            cout<<'*';
-            ch =getch();
+            cout << '*';
+            ch = getch();
         }
+        cout << "\n";
 
-        for (int i=0; i<100 ; i++ ){
-            if(id == usersArr[i].Id && password==usersArr[i].Password){
-                cout<< "successful login, welcome "<< usersArr[i].User_name << endl;
+        password = encrypt_pass(password);
+
+        for (int i = 0; i < 100; i++) {
+            if (id == usersArr[i].Id && password == usersArr[i].Password) {
+                cout << "\nsuccessful login, welcome " << usersArr[i].User_name << endl;
                 usr_index = to_string(i);
+                found = true;
+                t = 3;
                 break;
             }
-            else if(i == 99){
-                    cout<< "wrong iD or Password , try again ! \n";
-                    cout<<"enter user's iD:\n";
-                    cin>>id;
-
-                    cout<<"enter user's password: \n";
-                    int ch;
-                    ch = getch();
-                    while (ch != 13)
-                    {
-                        password.push_back(ch);
-                        cout<<'*';
-                        ch =getch();
-                    }
-
-                    for (int i=0; i<100 ; i++ ){
-                        if(id == usersArr[i].Id && password==usersArr[i].Password){
-                            cout<< "successful login, welcome "<< usersArr[i].User_name << endl;
-                            usr_index = to_string(i);
-                            break;
-                    }
-                    else if(i == 99){
-                        cout<<"you are denied access to the system !\n";
-                        break;
-                    }
-                }
-            }
         }
+        if (!found)
+        {
+            cout << "wrong iD or Password , try again ! \n";
+            id, password = "";
         }
-	}
+
+        if ((!found) && (t==3))
+        {
+            cout << "you are denied access to the system !\n";
+            break;
+        }
+
+        t++;
+    }
+
     return id, password, usr_index;
 }
 
