@@ -6,7 +6,7 @@ using namespace std;
 
 void registerNewAcc(fstream& file, char name[100]);
 
-void login(fstream& file, char name[100]);
+string sign_in(fstream& file, char name[100]);
 
 void changePass(fstream& file, char name[100]);
 

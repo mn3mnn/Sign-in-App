@@ -92,7 +92,7 @@ bool takeInput() {
 	else if (option == 2)
 	{
 		
-		login(dataFile, name);
+		sign_in(dataFile, name);
 	}
 	else if (option == 3) 
 	{	

@@ -60,12 +60,36 @@ void save_new_user(fstream& file, char name[100], string& id, string& email, str
 	file.seekp(0, ios::end);
 
 	file << id << " ";
-	file << email << " ";
+    file << username << " ";
 	file << password << " ";
-	file << username << " ";
+    file << email << " ";
 	file << phone << "\n";
+
 	cout << "User added successfully.\n";
 	file.close();
+}
+
+void save_changes(fstream& file, char name[100]) {
+
+    file.close();
+    // open the file and load the data and then close it
+    file.open(name, ios_base::out);
+
+    int i = 0;
+    for (int i = 0; i < 100; i++)
+    {
+        file << usersArr[i].Id << " ";
+
+        file << usersArr[i].User_name << " ";
+             
+        file << usersArr[i].Password << " ";
+             
+        file << usersArr[i].Email << " ";
+             
+        file << usersArr[i].Phone << "\n";
+    }
+    file.close();
+
 }
 
 // return true if the Id exists before
@@ -181,44 +205,36 @@ string encrypt_pass(string& pass) {
 	return pass;
 
 }
-//________________________________________________________________________________________________
-string decrypt_pass(string& pass) {
-	const int letterCount = 'z' - 'a' + 1;
-    for (auto &letter: pass) {
-        if (!isalpha(letter)) {
-            continue;
-        }
-        const bool isUpper = isupper(letter);
-        const char baseOffset = isUpper ? 'A' : 'a';
-        const auto distanceFromAlphabetStart = letter - baseOffset;
-        letter = (baseOffset + letterCount - 1) - distanceFromAlphabetStart;
-    }
 
-	return pass;
+
+void print_pass_validation() {
+    cout
+        << "1.Your password must be at least 8 characters long.\n\n\n"
+        << "2.It must contain at least one character that is not a letter, such as a digit.\n\n\n"
+        << "3.The following special characters can be used in passwords\n\n\n"
+        << " ---------------------------------------------------------------\n"
+        << "| curly brackets {} |round brackets () |square brackets []      |\n"
+        << "| hash #            |colon:            |semi-colon ;            |\n"
+        << "| comma ,           |full-stop .       |question mark ?         |\n"
+        << "| exclamation mark !|bar or pip |      |ampersand &             |\n"
+        << "| underscore _      |backtick `        |tilde ~                 |\n"
+        << "| at @              |dollar $          |percent %               |\n"
+        << "| slash /           |backslash \        |arithmetic symbols =+-* |\n"
+        << "| caret ^           |single quote '    |double quotes \"         |\n"
+        << " ---------------------------------------------------------------\n\n\n";
 }
-//_______________________________________________________________________________________________
+
+
 // take a valid pass
 string take_valid_pass() {
-    cout
-    <<"1.Your password must be at least 8 characters long.\n\n\n"
-    <<"2.It must contain at least one character that is not a letter, such as a digit.\n\n\n"
-    <<"3.The following special characters can be used in passwords\n\n\n"
-    <<" ---------------------------------------------------------------\n"
-    <<"| curly brackets {} |round brackets () |square brackets []      |\n"
-    <<"| hash #            |colon:            |semi-colon ;            |\n"
-    <<"| comma ,           |full-stop .       |question mark ?         |\n"
-    <<"| exclamation mark !|bar or pip |      |ampersand &             |\n"
-    <<"| underscore _      |backtick `        |tilde ~                 |\n"
-    <<"| at @              |dollar $          |percent %               |\n"
-    <<"| slash /           |backslash \        |arithmetic symbols =+-* |\n"
-    <<"| caret ^           |single quote '    |double quotes \"         |\n"
-    <<" ---------------------------------------------------------------\n\n\n";
-//______________________________________________________________________________________________
+ 
+    print_pass_validation();
+    
 	string pass;
 	string pass2;
 	regex pass_ex;
 	smatch match;
-	pass_ex = "(?=^.{8,}$)(?=.*\d)(?=.*[!@#$%^&*]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$";    // --------------------------------------  *  type regex here  *   --------------------------------------------------------------
+	pass_ex = "(?=^.{8,}$)(?=.*\\d)(?=.*[!@#$%^&*]+)(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";  
 	cout << "Enter a strong password:\n";
     int ch;
     ch = getch();
@@ -253,18 +269,15 @@ string take_valid_pass() {
     ch =getch();
     }
     cout<<endl;
-    if (pass2 == pass)
+    if (pass2 != pass)
     {
-        cout<<"";
-    }
-    else
-    {
-        cout<<"Please try again!!! The passwords are not identical!!!\n";
+        cout << "Please try again! The passwords are not identical !\n";
         take_valid_pass();
     }
+   
     // encrypt the password
     pass = encrypt_pass(pass);
-//__________________________________________________________________________________________________
+
 	// return the encrypted password
 	return pass;
 }
@@ -304,16 +317,24 @@ void registerNewAcc(fstream& file, char name[100]) {
 
 	// save the info to the file
 	save_new_user(file, name, id, email, username, password, phone);
+    
+    usersArr->Email.clear();
+    usersArr->Id.clear();
+    usersArr->User_name.clear();
+    usersArr->Password.clear();
+    usersArr->Phone.clear();
 
+    fillUsersArr(file, name);
+   
 }
 
-void sign_in(){
-    string iD , password;
+string sign_in(fstream& file, char name[100]){
+    string id, password, usr_index;
 
 	cout<<"enter user's iD:\n ";
-	cin>>iD;
+	cin >> id;
 
-	cout<<"enter user's password: \n";
+	cout<<"enter user's password:\n";
 	int ch;
     ch = getch();
     while (ch != 13)
@@ -324,15 +345,16 @@ void sign_in(){
     }
     password = encrypt_pass(password);
 	for (int i=0; i<100 ; i++ ){
-        if(iD == usersArr[i].Id && password==usersArr[i].Password){
+        if(id == usersArr[i].Id && password == usersArr[i].Password){
             cout<< "successful login, welcome\n "<< usersArr[i].User_name << endl;
+            usr_index = to_string(i);
             break;
         }
-        else if (i== 99){
+        else if(i==99){
 
         cout<< "wrong iD or Password , try again ! \n";
         cout<<"enter user's iD:\n ";
-        cin>>iD;
+        cin>>id;
 
         cout<<"enter user's password:\n ";
         int ch;
@@ -345,14 +367,15 @@ void sign_in(){
         }
 
         for (int i=0; i<100 ; i++ ){
-            if(iD == usersArr[i].Id && password==usersArr[i].Password){
-                cout<< "successful login, welcome\n "<< usersArr[i].User_name << endl;
+            if(id == usersArr[i].Id && password==usersArr[i].Password){
+                cout<< "successful login, welcome "<< usersArr[i].User_name << endl;
+                usr_index = to_string(i);
                 break;
             }
             else if(i == 99){
                     cout<< "wrong iD or Password , try again ! \n";
-                    cout<<"enter user's iD:\n ";
-                    cin>>iD;
+                    cout<<"enter user's iD:\n";
+                    cin>>id;
 
                     cout<<"enter user's password: \n";
                     int ch;
@@ -365,92 +388,44 @@ void sign_in(){
                     }
 
                     for (int i=0; i<100 ; i++ ){
-                        if(iD == usersArr[i].Id && password==usersArr[i].Password){
-                            cout<< "successful login, welcome\n "<< usersArr[i].User_name << endl;
+                        if(id == usersArr[i].Id && password==usersArr[i].Password){
+                            cout<< "successful login, welcome "<< usersArr[i].User_name << endl;
+                            usr_index = to_string(i);
                             break;
                     }
                     else if(i == 99){
                         cout<<"you are denied access to the system !\n";
                         break;
                     }
-
                 }
-
             }
-
-
         }
-
         }
 	}
-}
-
-//
-void login(fstream& file, char name[100]) {
-	cout << "login..\n";
-	sign_in();
+    return id, password, usr_index;
 }
 
 //
 void changePass(fstream& file, char name[100]) {
 	cout << "change pass..\n";
 
-    sign_in();
+    string id, old_password, new_password, check, usr_index;
+    int index;
 
-    string old_password , new_password , check ;
+    // sign in and get user's info
+    id, old_password, usr_index = sign_in(file, name);
 
-    cout<<"\n enter the old password: \n";
-    int ch;
-    ch = getch();
-    while (ch != 13)
-    {
-        old_password.push_back(ch);
-        cout<<'*';
-        ch =getch();
-    }
-    cout<<endl;
-    old_password = encrypt_pass(old_password);
+    // convert usr_index to int type 
+    index = stoi(usr_index);
+ 
+    cout << "enter the new password:\n";
+    new_password = take_valid_pass();
+    
+    
+    cout << "done password has changed\n";
 
+    usersArr[index].Password = new_password;
 
-
-    for(int i =0 ; i<100 ; i++){
-        if(old_password == usersArr[i].Password){
-            cout<<"enter the new password: ";
-            int ch;
-            ch = getch();
-            while (ch != 13)
-            {
-                new_password.push_back(ch);
-                cout<<'*';
-                ch =getch();
-            }
-            cout<<endl;
-
-
-            cout<<"enter the new password again: ";
-            ch = getch();
-            while (ch != 13)
-            {
-                check.push_back(ch);
-                cout<<'*';
-                ch =getch();
-            }
-            cout<<endl;
-
-            if (new_password == check){
-                cout<<"done password has changed";
-                usersArr[i].Password = new_password ;
-                break;
-            }
-            else{
-                cout<<" the password don't match !" ;
-                break;
-            }
-        }
-        else if( i == 99 ){
-            cout<<"wrong password !" ;
-        }
-    }
-    new_password = encrypt_pass(new_password);
-
+    save_changes(file, name);
+   
 }
