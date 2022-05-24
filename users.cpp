@@ -15,9 +15,11 @@
 
 using namespace std;
 
+// index of the last user at usersArr
+int LAST = 0;
+
 struct Users {
 	string Id, User_name, Email, Password, Phone;
-
 
 };
 
@@ -47,25 +49,9 @@ void fillUsersArr(fstream& file, char name[100]) {
 		// move to next user
 		++i;
 	}
-	file.close();
-}
+  
+    LAST = i - 1;
 
-void save_new_user(fstream& file, char name[100], string& id, string& email, string& username, string& password, string& phone) {
-
-	file.close();
-	// open the file and write data into it and then close it
-	file.open(name, ios_base::binary | ios_base::out | ios_base::in);
-
-	// set position to the end of file
-	file.seekp(0, ios::end);
-
-	file << id << " ";
-    file << username << " ";
-	file << password << " ";
-    file << email << " ";
-	file << phone << "\n";
-
-	cout << "User added successfully.\n";
 	file.close();
 }
 
@@ -317,8 +303,18 @@ void registerNewAcc(fstream& file, char name[100]) {
 	// get strong pass
 	password = take_valid_pass();
 
+
+    usersArr[LAST].Email = email;
+    usersArr[LAST].Id = id;
+    usersArr[LAST].Password = password;
+    usersArr[LAST].Phone = phone;
+    usersArr[LAST].User_name = username;
+
+
+    cout << "User added successfully.\n";
+
 	// save the info to the file
-	save_new_user(file, name, id, email, username, password, phone);
+    save_changes(file, name);
 
 }
 
